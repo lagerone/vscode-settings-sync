@@ -1,8 +1,7 @@
 """Syncs vscode settings to configured vscode projects"""
 import os
 import shutil
-import subprocess
-from typing import List
+from typing import Tuple
 
 from config import get_project_paths
 
@@ -14,6 +13,14 @@ _WORKSPACE_DIR = os.path.abspath(
 _SETTINGS_TO_SYNC_PATH = os.path.join(_WORKSPACE_DIR, "settings-to-sync")
 
 
+def _sync_file(source_path: str, target_path: str):
+    if (os.path.exists(target_path)):
+        print(f'Skipping file "{target_path}" since it already exists.')
+        return
+    shutil.copyfile(source_path, target_path)
+    print(f'Copied "{source_path}" to "{target_path}".')
+
+
 def _sync_vscode_settings(project_path: str) -> None:
     """Syncs vscode settings"""
     target_vscode_path = os.path.join(project_path, ".vscode")
@@ -21,27 +28,22 @@ def _sync_vscode_settings(project_path: str) -> None:
     source_path = os.path.join(_SETTINGS_TO_SYNC_PATH,
                                "settings.json")
     target_path = os.path.join(target_vscode_path, "settings.json")
-    shutil.copyfile(src=source_path, dst=target_path)
-    print(f"Copied '{source_path}' to '{target_path}'.")
+    _sync_file(source_path == source_path, target_path == target_path)
 
 
 def _sync_env_files(project_path: str) -> None:
     """Syncs .env files"""
-    env_target = os.path.join(project_path, ".env")
+    pyrightconfig = (os.path.join(_SETTINGS_TO_SYNC_PATH, "pyrightconfig.json"), os.path.join(
+        project_path, "pyrightconfig.json"))
 
-    if (os.path.exists(env_target)):
-        print(f"Skipping env-files: '{env_target}' exists.")
-        return
+    env = (os.path.join(_SETTINGS_TO_SYNC_PATH, ".env"), os.path.join(
+        project_path, "pyrightconfig.json"))
 
-    env_source = os.path.join(_SETTINGS_TO_SYNC_PATH, ".env")
-    env_example_source = os.path.join(_SETTINGS_TO_SYNC_PATH,
-                                      ".env.example")
-    env_example_target = os.path.join(project_path, ".env.example")
+    env_example = (os.path.join(_SETTINGS_TO_SYNC_PATH, ".env.example"), os.path.join(
+        project_path, ".env.example"))
 
-    shutil.copyfile(env_source, env_target)
-    print(f"Copied '{env_source}'to '{env_target}'.")
-    shutil.copyfile(env_example_source, env_example_target)
-    print(f"Copied '{env_example_source}' to '{env_example_target}'.")
+    for source_path, target_path in [pyrightconfig, env, env_example]:
+        _sync_file(source_path=source_path, target_path=target_path)
 
 
 def run_sync() -> None:
