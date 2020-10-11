@@ -17,5 +17,6 @@
     }
   },
   "python.testing.promptToConfigure": false,
-  "python.analysis.extraPaths": ["src"]
+  "python.analysis.extraPaths": ["src"],
+  "python.analysis.typeCheckingMode": "strict"
 }

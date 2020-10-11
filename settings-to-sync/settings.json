@@ -5,16 +5,18 @@
   "python.formatting.provider": "autopep8",
   "python.testing.autoTestDiscoverOnSaveEnabled": true,
   "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true,
+  "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
-  "python.testing.unittestArgs": ["-v", "-s", "./src", "-p", "test_*.py"],
-  "python.testing.promptToConfigure": false,
+  "python.testing.unittestArgs": ["-v", "-s", "./src/tests", "-p", "test_*.py"],
   "[yaml]": {
     "editor.formatOnSave": false
   },
   "[python]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": false
+      "source.organizeImports": true
     }
-  }
+  },
+  "python.testing.promptToConfigure": false,
+  "python.analysis.extraPaths": ["src"],
+  "python.analysis.typeCheckingMode": "strict"
 }
